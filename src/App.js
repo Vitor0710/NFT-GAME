@@ -47,13 +47,13 @@ function App() {
           console.log('Found an authorized account:', account);
           setCurrentAccount(account);
         } else {
-          // console.log('No authorized account found');
-          toast.dismiss();
-          toast.error('No authorized account found', {
-            position: "top-right",
-            pauseOnHover: true,
-            draggable: false,
-          });
+          console.log('No authorized account found');
+          // toast.dismiss();
+          // toast.error('No authorized account found', {
+          //   position: "top-right",
+          //   pauseOnHover: true,
+          //   draggable: false,
+          // });
         }
         setIsLoading(false);
       }
