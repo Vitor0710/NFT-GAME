@@ -4,7 +4,7 @@ import './SelectCharacter.css';
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import LoadingIndicator from '../LoadingIndicator';
 
-const SelectCharacter = ({ setCharacterNFT }) => {
+const SelectCharacter = ({ setCharacterNFT, myEpicGame }) => {
     const [characters, setCharacters] = useState([]);
     const [gameContract, setGameContract] = useState(null);
     const [mintingCharacter, setMintingCharacter] = useState(false);

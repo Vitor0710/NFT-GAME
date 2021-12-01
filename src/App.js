@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import LoadingIndicator from './components/LoadingIndicator';
+// import myEpicGame from "../../artifacts/contracts/WavePortal.sol/WavePortal.json"
 
 function App() {
-  /*
-   * Just a state variable we use to store our user's public wallet. Don't forget to import useState.
-   */
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +80,10 @@ function App() {
         </div>
       );
     } else if (currentAccount && !characterNFT) {
-      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+      return <SelectCharacter 
+        setCharacterNFT={setCharacterNFT} 
+        myEpicGame={myEpicGame} 
+      />;
     } else if (currentAccount && characterNFT) {
       return <Arena characterNFT={characterNFT}  setCharacterNFT={setCharacterNFT} />;
     }
