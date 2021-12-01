@@ -51,6 +51,41 @@ const Arena = ({ characterNFT, setCharacterNFT, myEpicGame }) => {
         }
     }, []);
 
+    useEffect(() => {
+        const fetchBoss = async () => {
+            const bossTxn = await gameContract.getBigBoss();
+            console.log('Boss:', bossTxn);
+            setBoss(transformCharacterData(bossTxn));
+        };
+
+        const onAttackComplete = (newBossHp, newPlayerHp) => {
+            const bossHp = newBossHp.toNumber();
+            const playerHp = newPlayerHp.toNumber();
+
+            console.log(`AttackComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`);
+
+            setBoss((prevState) => {
+                return { ...prevState, hp: bossHp };
+            });
+
+            setCharacterNFT((prevState) => {
+                return { ...prevState, hp: playerHp };
+            });
+        };
+
+        if (gameContract) {
+            fetchBoss();
+            gameContract.on('AttackComplete', onAttackComplete);
+        }
+
+        return () => {
+            if (gameContract) {
+                gameContract.off('AttackComplete', onAttackComplete);
+            }
+        }
+    }, [gameContract]);
+
+
   return (
     <div className="arena-container">
       Hello
