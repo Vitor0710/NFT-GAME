@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import LoadingIndicator from './components/LoadingIndicator';
-// import myEpicGame from "../../artifacts/contracts/WavePortal.sol/WavePortal.json"
-
+import myEpicGame from "./artifacts/contracts/MyEpicGame.sol/MyEpicGame.json";
+import SelectCharacter from './components/SelectCharacter';
+import Arena from './components/Arena';
+import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
 function App() {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
@@ -89,7 +91,39 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    setIsLoading(true);
+    checkIfWalletIsConnected();
+  }, []);
 
+  useEffect(() => {
+    const fetchNFTMetadata = async () => {
+      console.log('Checking for Character NFT on address:', currentAccount);
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const gameContract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        myEpicGame.abi,
+        signer
+      );
+
+      const txn = await gameContract.checkIfUserHasNFT();
+      console.log(txn);
+      if (txn.name) {
+        console.log('User has character NFT');
+        setCharacterNFT(transformCharacterData(txn));
+      } else {
+        console.log('No character NFT found');
+      }
+      setIsLoading(false);
+    };
+
+    if (currentAccount) {
+      console.log('CurrentAccount:', currentAccount);
+      fetchNFTMetadata();
+    }
+  }, [currentAccount]);
 
 
   return (
