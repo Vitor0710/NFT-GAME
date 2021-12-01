@@ -28,6 +28,27 @@ const SelectCharacter = ({ setCharacterNFT }) => {
         }
     }, []);
 
+    useEffect(() => {
+        const getCharacters = async () => {
+            try {
+                console.log('Getting contract characters to mint');
+
+                const charactersTxn = await gameContract.getAllDefaultCharacters();
+                console.log('charactersTxn:', charactersTxn);
+
+                const characters = charactersTxn.map((characterData) =>
+                transformCharacterData(characterData)
+                );
+
+                setCharacters(characters);
+            } catch (error) {
+                console.error('Something went wrong fetching characters:', error);
+            }
+        };
+
+        
+    }, [gameContract]);
+
     
 
     // Render Methods
