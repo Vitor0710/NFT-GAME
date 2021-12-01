@@ -56,6 +56,38 @@ function App() {
     }
   };
 
+  // Render Methods
+  const renderContent = () => {
+    /*
+    * If the app is currently loading, just render out LoadingIndicator
+    */
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
+
+    if (!currentAccount) {
+      return (
+        <div className="connect-wallet-container">
+          <img
+            src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
+            alt="Monty Python Gif"
+          />
+          <button
+            className="cta-button connect-wallet-button"
+            onClick={connectWalletAction}
+          >
+            Connect Wallet To Get Started
+          </button>
+        </div>
+      );
+    } else if (currentAccount && !characterNFT) {
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+    } else if (currentAccount && characterNFT) {
+      return <Arena characterNFT={characterNFT}  setCharacterNFT={setCharacterNFT} />;
+    }
+  };
+
+
 
 
   return (
