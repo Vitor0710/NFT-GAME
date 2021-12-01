@@ -60,7 +60,16 @@ const SelectCharacter = ({ setCharacterNFT }) => {
             alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${gameContract}/${tokenId.toNumber()}`)
         };
 
-        
+        if (gameContract) {
+            getCharacters();
+            gameContract.on('CharacterNFTMinted', onCharacterMint);
+        }
+
+        return () => {
+            if (gameContract) {
+                gameContract.off('CharacterNFTMinted', onCharacterMint);
+            }
+        };
     }, [gameContract]);
 
     
