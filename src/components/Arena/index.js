@@ -3,32 +3,44 @@ import { ethers } from 'ethers';
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import './Arena.css';
 import LoadingIndicator from '../LoadingIndicator';
+import { toast } from 'react-toastify';
 
 const Arena = ({ characterNFT, setCharacterNFT, myEpicGame }) => {
     const [gameContract, setGameContract] = useState(null);
     const [boss, setBoss] = useState(null);
     const [attackState, setAttackState] = useState('');
     const [showToast, setShowToast] = useState(false);
+    
+    toast.configure({
+        autoClose: 7000,
+        draggable: true,
+    });
 
     // Actions
     const runAttackAction = async () => {
         try {
-        if (gameContract) {
-            setAttackState('attacking');
-            console.log('Attacking boss...');
-            const attackTxn = await gameContract.attackBoss();
-            await attackTxn.wait();
-            console.log('attackTxn:', attackTxn);
-            setAttackState('hit');
+            if (gameContract) {
+                setAttackState('attacking');
+                console.log('Attacking boss...');
+                const attackTxn = await gameContract.attackBoss();
+                await attackTxn.wait();
+                console.log('attackTxn:', attackTxn);
+                setAttackState('hit');
 
-            setShowToast(true);
-            setTimeout(() => {
-            setShowToast(false);
-            }, 5000);
-        }
+                setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                }, 5000);
+            }
         } catch (error) {
-        console.error('Error attacking boss:', error);
-        setAttackState('');
+            // console.error('Error attacking boss:', error);
+            toast.dismiss();
+            toast.error('Error attacking boss:', error.message, {
+                position: "top-right",
+                pauseOnHover: true,
+                draggable: false,
+            });
+            setAttackState('');
         }
     };
 
@@ -37,17 +49,17 @@ const Arena = ({ characterNFT, setCharacterNFT, myEpicGame }) => {
         const { ethereum } = window;
 
         if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const gameContract = new ethers.Contract(
-            CONTRACT_ADDRESS,
-            myEpicGame.abi,
-            signer
-        );
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const gameContract = new ethers.Contract(
+                CONTRACT_ADDRESS,
+                myEpicGame.abi,
+                signer
+            );
 
-        setGameContract(gameContract);
+            setGameContract(gameContract);
         } else {
-        console.log('Ethereum object not found');
+            console.log('Ethereum object not found');
         }
     }, []);
 

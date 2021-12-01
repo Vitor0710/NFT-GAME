@@ -7,6 +7,8 @@ import Arena from './components/Arena';
 import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
 import twitterLogo from './assets/twitter-logo.svg';
 
+import { toast } from 'react-toastify';
+
 // Constants
 const TWITTER_HANDLE = '_abiodunAwoyemi';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
@@ -15,14 +17,25 @@ function App() {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  
+  toast.configure({
+    autoClose: 7000,
+    draggable: true,
+  });
+  
   const checkIfWalletIsConnected = async() => {
     try {
       const { ethereum } = window;
 
       if (!ethereum) {
-        console.log('Make sure you have MetaMask!');
+        // console.log('Make sure you have MetaMask!');
         setIsLoading(false);
+        toast.dismiss();
+        toast.info("Make sure you have metaMask!", {
+          position: "top-right",
+          pauseOnHover: true,
+          draggable: false,
+        });
         return;
       } else {
         console.log('We have the ethereum object', ethereum);
@@ -34,12 +47,24 @@ function App() {
           console.log('Found an authorized account:', account);
           setCurrentAccount(account);
         } else {
-          console.log('No authorized account found');
+          // console.log('No authorized account found');
+          toast.dismiss();
+          toast.error('No authorized account found', {
+            position: "top-right",
+            pauseOnHover: true,
+            draggable: false,
+          });
         }
         setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.dismiss();
+      toast.error(error.message, {
+        position: "top-right",
+        pauseOnHover: true,
+        draggable: false,
+      });
       setIsLoading(false);
     }
   };
@@ -49,7 +74,13 @@ function App() {
       const { ethereum } = window;
 
       if (!ethereum) {
-        alert('Get MetaMask!');
+        // alert('Get MetaMask!');
+        toast.dismiss();
+        toast.info('Get MetaMask!', {
+          position: "top-right",
+          pauseOnHover: true,
+          draggable: false,
+        });
         return;
       }
 
@@ -59,8 +90,20 @@ function App() {
 
       console.log('Connected', accounts[0]);
       setCurrentAccount(accounts[0]);
+      toast.dismiss();
+      toast.success('Connected Successfully', {
+        position: "top-right",
+        pauseOnHover: true,
+        draggable: false,
+      });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.dismiss();
+      toast.error(error.message, {
+        position: "top-right",
+        pauseOnHover: true,
+        draggable: false,
+      });
     }
   };
 
@@ -125,7 +168,13 @@ function App() {
         console.log('User has character NFT');
         setCharacterNFT(transformCharacterData(txn));
       } else {
-        console.log('No character NFT found');
+        // console.log('No character NFT found');
+        toast.dismiss();
+        toast.info('No character NFT found', {
+          position: "top-right",
+          pauseOnHover: true,
+          draggable: false,
+        });
       }
       setIsLoading(false);
     };
@@ -143,26 +192,7 @@ function App() {
         <div className="header-container">
           <p className="header gradient-text">⚔️ Metaverse Slayer ⚔️</p>
           <p className="sub-text">Team up to protect the Metaverse!</p>
-          {/* This is where our button and image code used to be!
-          *	Remember we moved it into the render method.
-          */}
           {renderContent()}
-          {/* <div className="connect-wallet-container">
-            <img
-              src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
-              alt="Monty Python Gif"
-            />
-            {/*
-             * Button that we will use to trigger wallet connect
-             * Don't forget to add the onClick event to call your method!
-             *!/}
-            <button
-              className="cta-button connect-wallet-button"
-              onClick={connectWalletAction}
-            >
-              Connect Wallet To Get Started
-            </button>
-          </div> */}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />

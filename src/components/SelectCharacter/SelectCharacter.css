@@ -80,3 +80,25 @@
   padding-top: 25px;
   object-fit: contain;
 }
+
+
+.select-character-container .alert-modal {
+  position: fixed;
+  background: white;
+  width: 24rem;
+  padding: 1rem;
+  left: 50%;
+  top: 0.5rem;
+  border-radius: 0.25rem;
+  transform: translate(-50%, 0%);
+}
+
+.select-character-container .alert-modal button {
+  background-color: rgba(52, 211, 153, 0.25);
+  padding: 0.25rem 1.25rem;
+  border-radius: 0.25rem;
+  color: white;
+  font-weight: 600;
+  text-align: right;
+  margin-top: 1rem;
+}

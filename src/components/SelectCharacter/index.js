@@ -4,27 +4,35 @@ import './SelectCharacter.css';
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import LoadingIndicator from '../LoadingIndicator';
 
+import { toast } from 'react-toastify';
+
 const SelectCharacter = ({ setCharacterNFT, myEpicGame }) => {
     const [characters, setCharacters] = useState([]);
     const [gameContract, setGameContract] = useState(null);
     const [mintingCharacter, setMintingCharacter] = useState(false);
+    const [eventAlert, setEventAlert] = useState("");
+    const [show, setShow] = useState(true);
+
+    toast.configure({
+        autoClose: 7000,
+        draggable: true,
+    });
 
     // UseEffect
     useEffect(() => {
         const { ethereum } = window;
 
         if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const gameContract = new ethers.Contract(
-            CONTRACT_ADDRESS,
-            myEpicGame.abi,
-            signer
-        );
-
-        setGameContract(gameContract);
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const gameContract = new ethers.Contract(
+                CONTRACT_ADDRESS,
+                myEpicGame.abi,
+                signer
+            );
+            setGameContract(gameContract);
         } else {
-        console.log('Ethereum object not found');
+            console.log('Ethereum object not found');
         }
     }, []);
 
@@ -37,12 +45,18 @@ const SelectCharacter = ({ setCharacterNFT, myEpicGame }) => {
                 console.log('charactersTxn:', charactersTxn);
 
                 const characters = charactersTxn.map((characterData) =>
-                transformCharacterData(characterData)
+                    transformCharacterData(characterData)
                 );
 
                 setCharacters(characters);
             } catch (error) {
-                console.error('Something went wrong fetching characters:', error);
+                // console.error('Something went wrong fetching characters:', error);
+                toast.dismiss();
+                toast.info('Something went wrong fetching characters:', error.message, {
+                    position: "top-right",
+                    pauseOnHover: true,
+                    draggable: false,
+                });
             }
         };
 
@@ -57,7 +71,9 @@ const SelectCharacter = ({ setCharacterNFT, myEpicGame }) => {
                 setCharacterNFT(transformCharacterData(characterNFT));
             }
 
-            alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${gameContract}/${tokenId.toNumber()}`)
+            let alert = `Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${gameContract}/${tokenId.toNumber()}`
+
+            setEventAlert(alert)
         };
 
         if (gameContract) {
@@ -84,7 +100,13 @@ const SelectCharacter = ({ setCharacterNFT, myEpicGame }) => {
                 setMintingCharacter(false);
             }
         } catch (error) {
-            console.warn('MintCharacterAction Error:', error);
+            // console.warn('MintCharacterAction Error:', error);
+            toast.dismiss();
+            toast.error('MintCharacterAction Error:', error.message, {
+            position: "top-right",
+            pauseOnHover: true,
+            draggable: false,
+            });
             setMintingCharacter(false);
         }
     };
@@ -125,6 +147,15 @@ const SelectCharacter = ({ setCharacterNFT, myEpicGame }) => {
                     />
                 </div>
             )}
+
+            {eventAlert
+                ? show && <div className="alert-modal">
+                    <div style={{overflowWrap: "break-word"}}>{ eventAlert }</div>
+                
+                    <button onClick={() => setShow(false)}>Close</button>
+                </div>
+                : null 
+                }
         </div>
     );
 };
