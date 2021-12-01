@@ -1,17 +1,29 @@
-const hre = require("hardhat");
+const main = async () => {
+  const gameContractFactory = await hre.ethers.getContractFactory('MyEpicGame');
+  const gameContract = await gameContractFactory.deploy(
+    ["  Kratos", "Ryu", "Cortana"],       // Names
+    ["QmRx99epswa9MEuRG4uHXMPm9BjpgztX1G9MZ1zYNLMozg", // Images
+    "QmXh3MW5ugiySdk7FaHpBgJGbhn3mfxfk7kHusgPHVKUy7", 
+    "QmThXvdYsFQKc9BQaAsbFuB6KvTaNpwPumF2PTaZVGdM3H"],
+    [100, 200, 300],    // HP values
+    [100, 50, 25],       // Attack damage values
+    "Sam Fisher", // Boss name
+    "QmcBunKeFVkuiqFPr6mp3uDRP6TedyWXqqHgkptgLjp1ue", // Boss image
+    10000, // Boss hp
+    50 // Boss attack damage
+  );
+  await gameContract.deployed();
+  console.log("Contract deployed to:", gameContract.address);
+};
 
-async function main() {
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
-
-  await greeter.deployed();
-
-  console.log("Greeter deployed to:", greeter.address);
-}
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
+const runMain = async () => {
+  try {
+    await main();
+    process.exit(0);
+  } catch (error) {
+    console.log(error);
     process.exit(1);
-  });
+  }
+};
+
+runMain();
