@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 import LoadingIndicator from './components/LoadingIndicator';
 import myEpicGame from "./artifacts/contracts/MyEpicGame.sol/MyEpicGame.json";
 import SelectCharacter from './components/SelectCharacter';
 import Arena from './components/Arena';
 import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
+import twitterLogo from './assets/twitter-logo.svg';
+
+// Constants
+const TWITTER_HANDLE = '_abiodunAwoyemi';
+const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
+
 function App() {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
@@ -83,11 +90,15 @@ function App() {
       );
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter 
-        setCharacterNFT={setCharacterNFT} 
+        setCharacterNFT={setCharacterNFT}
         myEpicGame={myEpicGame} 
       />;
     } else if (currentAccount && characterNFT) {
-      return <Arena characterNFT={characterNFT}  setCharacterNFT={setCharacterNFT} />;
+      return <Arena 
+        characterNFT={characterNFT} 
+        setCharacterNFT={setCharacterNFT} 
+        myEpicGame={myEpicGame} 
+      />;
     }
   };
 
@@ -128,7 +139,41 @@ function App() {
 
   return (
     <div className="App">
-      Hello World
+      <div className="container">
+        <div className="header-container">
+          <p className="header gradient-text">⚔️ Metaverse Slayer ⚔️</p>
+          <p className="sub-text">Team up to protect the Metaverse!</p>
+          {/* This is where our button and image code used to be!
+          *	Remember we moved it into the render method.
+          */}
+          {renderContent()}
+          {/* <div className="connect-wallet-container">
+            <img
+              src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
+              alt="Monty Python Gif"
+            />
+            {/*
+             * Button that we will use to trigger wallet connect
+             * Don't forget to add the onClick event to call your method!
+             *!/}
+            <button
+              className="cta-button connect-wallet-button"
+              onClick={connectWalletAction}
+            >
+              Connect Wallet To Get Started
+            </button>
+          </div> */}
+        </div>
+        <div className="footer-container">
+          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
+          <a
+            className="footer-text"
+            href={TWITTER_LINK}
+            target="_blank"
+            rel="noreferrer"
+          >{`built by @${TWITTER_HANDLE}`}</a>
+        </div>
+      </div>
     </div>
   );
 }
